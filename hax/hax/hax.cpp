@@ -59,6 +59,13 @@ void get_pid(char *pname)
     CloseHandle(snapshot);
 }
 
+struct vector
+{
+    float x;
+    float y;
+    float z;
+};
+
 int main()
 {
     get_pid((char *)"csgo.exe");
@@ -68,15 +75,30 @@ int main()
         get_baseaddr(pID, (char*)"client_panorama.dll");
         if (baseAddr != NULL)
         {
-            DWORD localp;
+            DWORD entityList = NULL;
             
-            ReadProcessMemory(process, (LPVOID)(baseAddr + dwLocalPlayer), &localp, sizeof(DWORD), 0);
+            ReadProcessMemory(process, (LPVOID)(baseAddr + dwEntityList), &entityList, sizeof(DWORD), 0);
+            DWORD pEntity = 0;
+            struct vector pos;
+            while (true)
+            {
+                std::cout << "-------------------------------------------" << std::endl;
+                for (size_t i = 0; i < 32; i++)
+                {
+                    ReadProcessMemory(process, (LPVOID)(baseAddr + dwEntityList + (i * 0x10)), &pEntity, sizeof(DWORD), 0);
+                    ReadProcessMemory(process, (LPVOID)(pEntity + 160), &pos, sizeof(struct vector), 0);
+                    if (pEntity != 0)
+                        std::cout << pEntity << " x : " << pos.x << " y : " << pos.y << " z : " << pos.z << std::endl;
+                }
+                std::cout << "-------------------------------------------" << std::endl;
+                Sleep(4000);
+            }
+            /* anti flash
             if (localp == NULL)
             {
                 while (localp == NULL)
                     ReadProcessMemory(process, (LPVOID)(baseAddr + dwLocalPlayer), &localp, sizeof(DWORD), 0);
             }
-            /* anti flash  
             DWORD flash = 0;
             while (true)
             {
