@@ -1,6 +1,5 @@
-﻿  hax.cpp
-C:\Users\zero\Desktop\cheated\hax\hax\hax.cpp(124,76): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
-C:\Users\zero\Desktop\cheated\hax\hax\hax.cpp(124,57): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
-C:\Users\zero\Desktop\cheated\hax\hax\hax.cpp(124,46): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
-C:\Users\zero\Desktop\cheated\hax\hax\hax.cpp(124,27): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
+﻿  Entities.cpp
+  hax.cpp
+  Génération de code en cours...
+C:\Users\zero\Desktop\cheated\hax\hax\hax.cpp(254): warning C4715: 'wWinMain' : les chemins de contrôle ne retournent pas tous une valeur
   hax.vcxproj -> C:\Users\zero\Desktop\cheated\hax\Debug\hax.exe
