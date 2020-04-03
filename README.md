@@ -1,7 +1,7 @@
-# Why make a cheat ?
+## Why do i made a cheat ?
 
-No, the reason why i've make a cheat for CS:GO isn't because i'm pretty bad when i'm playing CS:GO.
-I wanted to learn (and still learning) more about C++, Heap, Stack, memory mapping and Windows API.
+The reason why i've made a cheat for CS:GO isn't because i'm pretty bad at the game.
+I wanted to learn (and still...) more about C++, Heap, Stack, memory mapping and Windows API.
 
 ![H4X0R](https://i.imgur.com/AEfCSHT.jpg)
 
