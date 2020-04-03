@@ -109,15 +109,34 @@ struct vector WorldToScreen(const struct vector pos, struct view_matrix_t matrix
 
 void DrawBox(ID2D1HwndRenderTarget* pRT, ID2D1SolidColorBrush* pCB, struct vector foot, struct vector head)
 {
-    float height = head.y - foot.y;
+    float height = foot.y - head.y;
     float width = height / 2.4f; // 2.4f is a magic number, idk why ...
-
+    pCB->SetColor(D2D1::ColorF(D2D1::ColorF::Red));
     pRT->DrawRectangle(
         D2D1::RectF(
             foot.x - (width / 2),
             foot.y,
             head.x + (width / 2),
             head.y),
+        pCB);
+}
+
+void DrawLife(ID2D1HwndRenderTarget* pRT, ID2D1SolidColorBrush* pCB, struct vector foot, struct vector head, int health)
+{
+    float height = foot.y - head.y;
+    float width = height / 2.4f; // 2.4f is a magic number, idk why ...
+    float HealthBar = health / 100.f;
+    float r, g, b = 0.f;
+    r = 1 - (1 * HealthBar);
+    g = 1 * HealthBar;
+    pCB->SetColor(D2D1::ColorF(D2D1::ColorF(r, g, b)));
+    float TopLeftX = head.x - (width / 2);
+    pRT->FillRectangle(
+        D2D1::RectF(
+            TopLeftX,
+            head.y,
+            TopLeftX + (HealthBar * width),
+            head.y - 4.f),
         pCB);
 }
 
@@ -223,7 +242,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
         LocalEntity.ReadTeamNum();
         pRT->BeginDraw();
         pRT->Clear(D2D1::ColorF(0, 0, 0, 0));
-        pCB->SetColor(D2D1::ColorF(D2D1::ColorF::Red));
         for (size_t i = 1; i < 32; i++)
         {
             // Get next entity struct
@@ -239,8 +257,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
                     {
                         // Convert pos vectors to a 2D vector
                         vector screen_body = WorldToScreen(pEntity.sEntity.Pos, view_matrix);
-                        vector screen_head = WorldToScreen(pEntity.sEntity.Head, view_matrix);
-                        DrawBox(pRT, pCB, screen_body, screen_head);
+                        if (screen_body.z > 0.01f)
+                        {
+                            vector screen_head = WorldToScreen(pEntity.sEntity.Head, view_matrix);
+                            DrawBox(pRT, pCB, screen_body, screen_head);
+                            DrawLife(pRT, pCB, screen_body, screen_head, pEntity.sEntity.Health);
+                        }
                     }
                 }
             }
