@@ -243,6 +243,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
     Drawer::SafeRelease(&pRT);
     Drawer::SafeRelease(&pCB);
     Drawer::SafeRelease(&pFactory);
+    DestroyWindow(hWnd);
+    CloseHandle(hProcess);
 }
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
