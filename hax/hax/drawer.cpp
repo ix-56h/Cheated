@@ -55,3 +55,49 @@ ID2D1SolidColorBrush* Drawer::init_SolidColorBrush(ID2D1HwndRenderTarget* pRT, D
     check_s_ok(hr, "init_SolidColorBrush");
     return (pColorBrush);
 }
+
+
+void Drawer::DrawBox(ID2D1HwndRenderTarget* pRT, ID2D1SolidColorBrush* pCB, Entity pEntity)
+{
+    pCB->SetColor(D2D1::ColorF(D2D1::ColorF::Red));
+    pRT->DrawRectangle(
+        D2D1::RectF(
+            pEntity.sEntity.Head.x,
+            pEntity.sEntity.Foot.y,
+            pEntity.sEntity.Head.x + pEntity.sEntity.RectWidth,
+            pEntity.sEntity.Head.y),
+        pCB);
+}
+
+void Drawer::DrawLife(ID2D1HwndRenderTarget* pRT, ID2D1SolidColorBrush* pCB, Entity pEntity)
+{
+    float HealthBar = pEntity.sEntity.Health / 100.f;
+    // color calculus
+    float r, g, b = 0.f;
+    r = 1 - (1 * HealthBar);
+    g = 1 * HealthBar;
+    pCB->SetColor(D2D1::ColorF(D2D1::ColorF(r, g, b)));
+    // end color calculus
+
+    pRT->FillRectangle(
+        D2D1::RectF(
+            pEntity.sEntity.Head.x,
+            pEntity.sEntity.Head.y,
+            pEntity.sEntity.Head.x + (HealthBar * pEntity.sEntity.RectWidth),
+            pEntity.sEntity.Head.y - 4.f),
+        pCB);
+}
+
+void Drawer::DrawArmor(ID2D1HwndRenderTarget* pRT, ID2D1SolidColorBrush* pCB, Entity pEntity)
+{
+    float ArmorBar = pEntity.sEntity.Armor / 100.f;
+    pCB->SetColor(D2D1::ColorF(D2D1::ColorF(0.26, 0.52, 0.98)));
+    pEntity.sEntity.Head.y -= 4.f;
+    pRT->FillRectangle(
+        D2D1::RectF(
+            pEntity.sEntity.Head.x,
+            pEntity.sEntity.Head.y,
+            pEntity.sEntity.Head.x + (ArmorBar * pEntity.sEntity.RectWidth),
+            pEntity.sEntity.Head.y - 4.f),
+        pCB);
+}

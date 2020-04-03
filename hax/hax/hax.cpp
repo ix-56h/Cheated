@@ -107,39 +107,6 @@ struct vector WorldToScreen(const struct vector pos, struct view_matrix_t matrix
     return out;
 }
 
-void DrawBox(ID2D1HwndRenderTarget* pRT, ID2D1SolidColorBrush* pCB, struct vector foot, struct vector head)
-{
-    float height = foot.y - head.y;
-    float width = height / 2.4f; // 2.4f is a magic number, idk why ...
-    pCB->SetColor(D2D1::ColorF(D2D1::ColorF::Red));
-    pRT->DrawRectangle(
-        D2D1::RectF(
-            foot.x - (width / 2),
-            foot.y,
-            head.x + (width / 2),
-            head.y),
-        pCB);
-}
-
-void DrawLife(ID2D1HwndRenderTarget* pRT, ID2D1SolidColorBrush* pCB, struct vector foot, struct vector head, int health)
-{
-    float height = foot.y - head.y;
-    float width = height / 2.4f; // 2.4f is a magic number, idk why ...
-    float HealthBar = health / 100.f;
-    float r, g, b = 0.f;
-    r = 1 - (1 * HealthBar);
-    g = 1 * HealthBar;
-    pCB->SetColor(D2D1::ColorF(D2D1::ColorF(r, g, b)));
-    float TopLeftX = head.x - (width / 2);
-    pRT->FillRectangle(
-        D2D1::RectF(
-            TopLeftX,
-            head.y,
-            TopLeftX + (HealthBar * width),
-            head.y - 4.f),
-        pCB);
-}
-
 HANDLE  init_processes(const char *ProcessName, const char *ModuleName)
 {
     // Get de pID of the process
@@ -222,7 +189,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
     ID2D1HwndRenderTarget* pRT = Drawer::init_RenderTarget(pFactory, hWnd, width, height);
     // Create a pCB (ColorBrush)
     ID2D1SolidColorBrush* pCB = Drawer::init_SolidColorBrush(pRT, D2D1::ColorF(0, 0, 0, 0));
+
+    // Do some weird magic with the window
     SetLayeredWindowAttributes(hWnd, RGB(0, 0, 0), 255, ULW_COLORKEY | LWA_ALPHA);
+    
     ShowWindow(hWnd, nCmdShow);
 
     thread thResizer(WindowResizer, hTargetWnd, hWnd);
@@ -235,33 +205,33 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
         }
         
         view_matrix_t view_matrix = Reader::RPM<view_matrix_t>(hProcess, baseAddr + dwViewMatrix);
-
         // Get the local team
         Entity LocalEntity(hProcess, baseAddr + dwEntityList);
-        //LocalEntity.ReadEntityDatas();
+
         LocalEntity.ReadTeamNum();
         pRT->BeginDraw();
         pRT->Clear(D2D1::ColorF(0, 0, 0, 0));
         for (size_t i = 1; i < 32; i++)
         {
-            // Get next entity struct
+            // Get next entity
             Entity pEntity(hProcess, baseAddr + dwEntityList + (i * 0x10));
             if (pEntity.EntityExist())
             {
-                // From this entity, get all data we need
+                // Read Team Number
                 pEntity.ReadTeamNum();
                 if (pEntity.sEntity.Team != LocalEntity.sEntity.Team)
                 {
+                    // Now we can use massive RPM
                     pEntity.ReadEntityDatas();
                     if (pEntity.IsAlive())
                     {
                         // Convert pos vectors to a 2D vector
-                        vector screen_body = WorldToScreen(pEntity.sEntity.Pos, view_matrix);
-                        if (screen_body.z > 0.01f)
+                        pEntity.WToS(view_matrix);
+                        if (pEntity.sEntity.Foot.z > 0.01f)
                         {
-                            vector screen_head = WorldToScreen(pEntity.sEntity.Head, view_matrix);
-                            DrawBox(pRT, pCB, screen_body, screen_head);
-                            DrawLife(pRT, pCB, screen_body, screen_head, pEntity.sEntity.Health);
+                            Drawer::DrawBox(pRT, pCB, pEntity);
+                            Drawer::DrawLife(pRT, pCB, pEntity);
+                            Drawer::DrawArmor(pRT, pCB, pEntity);
                         }
                     }
                 }

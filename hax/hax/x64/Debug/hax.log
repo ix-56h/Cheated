@@ -1,7 +1,0 @@
-﻿  hax.cpp
-C:\Users\zero\Desktop\cheated\hax\hax\hax.cpp(28,122): warning C4311: 'cast de type' : troncation de pointeur de 'BYTE *' à 'unsigned int'
-C:\Users\zero\Desktop\cheated\hax\hax\hax.cpp(28,122): warning C4302: 'cast de type' : troncation de 'BYTE *' à 'unsigned int'
-C:\Users\zero\Desktop\cheated\hax\hax\hax.cpp(29,56): warning C4311: 'cast de type' : troncation de pointeur de 'BYTE *' à 'unsigned int'
-C:\Users\zero\Desktop\cheated\hax\hax\hax.cpp(29,56): warning C4302: 'cast de type' : troncation de 'BYTE *' à 'unsigned int'
-C:\Users\zero\Desktop\cheated\hax\hax\hax.cpp(73,73): warning C4312: 'cast de type' : la conversion de 'unsigned long' en 'LPVOID' d'une taille supérieure
-  hax.vcxproj -> C:\Users\zero\Desktop\cheated\hax\x64\Debug\hax.exe

@@ -4,6 +4,7 @@
 #include "offsets.h"
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+struct vector WorldToScreen(const struct vector pos, struct view_matrix_t matrix);
 
 struct vector
 {
@@ -14,13 +15,5 @@ struct view_matrix_t {
     float matrix[16];
 };
 
-struct pEntityVars {
-	int		Health;
-	int		Team;
-	BYTE	Flag;
-	//string	Name;
-	vector	Pos;
-	vector	Head;
-};
 
 
